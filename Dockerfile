@@ -1,4 +1,11 @@
+
+FROM eclipse-temurin:17-jdk-focal AS builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
 FROM eclipse-temurin:17-jdk-focal
-ADD target/webapp-0.0.1-SNAPSHOT.jar webapp-0.0.1-SNAPSHOT.jar
+WORKDIR /app
+COPY --from=builder /app/target/webapp-0.0.1-SNAPSHOT.jar webapp-0.0.1-SNAPSHOT.jar
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "webapp-0.0.1-SNAPSHOT.jar"] 
+ENTRYPOINT ["java", "-jar", "webapp-0.0.1-SNAPSHOT.jar"]
